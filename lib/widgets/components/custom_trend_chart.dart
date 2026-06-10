@@ -124,7 +124,6 @@ class _CustomTrendChartState extends State<CustomTrendChart> {
         Expanded(
           child: Row(
             children: [
-              // 1. Sumbu Y Kiri
               SizedBox(
                 width: 45,
                 child: BarChart(
@@ -276,7 +275,6 @@ class _CustomTrendChartState extends State<CustomTrendChart> {
         ),
         extraLinesData: ExtraLinesData(
           horizontalLines: [
-            // Garis dasar (0) dibuat solid
             HorizontalLine(
               y: 0,
               color: gridLineColor, 

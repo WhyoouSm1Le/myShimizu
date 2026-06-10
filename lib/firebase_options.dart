@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -46,32 +47,32 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDbvb54KLRQy67adOG8HXzocR79GMnCMXk',
-    appId: '1:908997914650:web:d10d6f479fc1abcb8d21a3',
-    messagingSenderId: '908997914650',
-    projectId: 'smart-pump-8ab25',
-    authDomain: 'smart-pump-8ab25.firebaseapp.com',
-    databaseURL: 'https://smart-pump-8ab25-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'smart-pump-8ab25.firebasestorage.app',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_WEB'] ?? '',
+    appId: dotenv.env['FIREBASE_APP_ID_WEB'] ?? '',
+    messagingSenderId: dotenv.env['MESSAGE_SENDER_ID'] ?? '',
+    projectId: dotenv.env['PROJECT_ID'] ?? '',
+    authDomain: dotenv.env['AUTH_DOMAIN'] ?? '',
+    databaseURL: dotenv.env['DATABASE_URL'],
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAFpDh5eFlD1WdP1or2649Xh2VlYAYQ_Bg',
-    appId: '1:908997914650:android:7c9a50e73bcd74118d21a3',
-    messagingSenderId: '908997914650',
-    projectId: 'smart-pump-8ab25',
-    databaseURL: 'https://smart-pump-8ab25-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'smart-pump-8ab25.firebasestorage.app',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_ANDROID'] ?? '',
+    appId: dotenv.env['FIREBASE_APP_ID_ANDROID'] ?? '',
+    messagingSenderId: dotenv.env['MESSAGE_SENDER_ID'] ?? '',
+    projectId: dotenv.env['PROJECT_ID'] ?? '',
+    databaseURL: dotenv.env['DATABASE_URL'] ?? '',
+    storageBucket: dotenv.env['STORAGE_BUCKET'] ?? '',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBZc0tsiFmIlwJBED3IqpCvfIDy3VnpwC8',
-    appId: '1:908997914650:ios:97503047ce2f12448d21a3',
-    messagingSenderId: '908997914650',
-    projectId: 'smart-pump-8ab25',
-    databaseURL: 'https://smart-pump-8ab25-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'smart-pump-8ab25.firebasestorage.app',
-    iosBundleId: 'com.example.shimizuApp',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_IOS'] ?? '',
+    appId: dotenv.env['FIREBASE_APP_ID_IOS'] ?? '',
+    messagingSenderId: dotenv.env['MESSAGE_SENDER_ID'] ?? '',
+    projectId: dotenv.env['PROJECT_ID'] ?? '',
+    databaseURL: dotenv.env['DATABASE_URL'] ?? '',
+    storageBucket: dotenv.env['STORAGE_BUCKET'] ?? '',
+    iosBundleId: dotenv.env['IOS_BUNDLE_ID'] ?? '',
   );
 }

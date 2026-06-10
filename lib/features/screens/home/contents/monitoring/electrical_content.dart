@@ -41,9 +41,9 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
         historyAsync.hasError &&
         !_isRetrying;
 
-    final bool showChartSkeleton = !hasInternet || 
-        _isRetrying || 
-        (historyAsync.isLoading && !historyAsync.hasValue) || 
+    final bool showChartSkeleton = historyAsync.isLoading ||
+        !hasInternet ||
+        _isRetrying ||
         (historyAsync.hasValue && historyAsync.value!.isEmpty);
 
     final bool showRealtimeSkeleton = realtimeAsync.value == null || !hasInternet || _isRetrying;

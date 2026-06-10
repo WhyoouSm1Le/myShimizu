@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimizu_app/core/models/cost_estimation_model.dart';
 
@@ -8,7 +9,7 @@ class CostEstimationRepository {
   CostEstimationRepository({http.Client? client}) : _client = client ?? http.Client();
 
   Future<CostEstimation> fetchCostPrediction() async {
-    const String url = 'https://timescale-db.rizkyanugrah.my.id/api/predict-cost';
+    String url = dotenv.env['BACKEND_URL_2'] ?? 'https://cost-url.com';
 
     try {
       final response = await _client.get(Uri.parse(url));

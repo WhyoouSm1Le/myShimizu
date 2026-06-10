@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimizu_app/core/models/energy_model.dart';
 
 class EnergyRepository {
   final _dbRef = FirebaseDatabase.instance.ref("PZEM_DATA");
   
-  final String _historyUrl = 'https://timescale-db.rizkyanugrah.my.id/api/history';
+  final String _historyUrl = dotenv.env['BACKEND_URL_1'] ?? 'https://history-url.com';
 
   Stream<EnergyModel> streamEnergyData() {
     return _dbRef.onValue.map((event) {
