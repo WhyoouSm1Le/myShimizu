@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "908997914650",
+    "firebase_url": "https://smart-pump-8ab25-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smart-pump-8ab25",
+    "storage_bucket": "smart-pump-8ab25.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908997914650:android:66574403f800e6388d21a3",
+        "android_client_info": {
+          "package_name": "com.example.pump_iot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFpDh5eFlD1WdP1or2649Xh2VlYAYQ_Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908997914650:android:7c9a50e73bcd74118d21a3",
+        "android_client_info": {
+          "package_name": "com.example.shimizu_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFpDh5eFlD1WdP1or2649Xh2VlYAYQ_Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
