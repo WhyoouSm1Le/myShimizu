@@ -7,10 +7,9 @@ import 'package:shimizu_app/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   await dotenv.load(fileName: ".env");
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
   runApp(const ProviderScope(child: ShimizuApp()));
 }
 
