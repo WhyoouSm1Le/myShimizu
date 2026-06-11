@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimizu_app/core/providers/connection_provider.dart';
 import 'package:shimizu_app/widgets/components/custom_skeletonizer.dart';
@@ -25,7 +26,15 @@ class ControlPage extends ConsumerWidget {
     final pumpNotifier = ref.read(pumpControlProvider.notifier);
 
     final bool isOnline = espStateAsync.value ?? false;
-    final bool isRunning = pumpStateAsync.value ?? false;
+    final bool isRunning = pumpStateAsync.value?.status ?? false;
+
+    String formattedLastUpdate = "--:--:--";
+    
+    final int lastUpdateMs = pumpStateAsync.value?.updatedAt ?? 0;
+    if (lastUpdateMs > 0) {
+      final dateTime = DateTime.fromMillisecondsSinceEpoch(lastUpdateMs);
+      formattedLastUpdate = DateFormat('HH:mm:ss').format(dateTime);
+    }
 
     final bool isButtonLoading =
         pumpStateAsync.isLoading && pumpStateAsync.hasValue;
@@ -110,7 +119,7 @@ class ControlPage extends ConsumerWidget {
                           const SizedBox(height: 5),
 
                           Text(
-                            "Last Update: 10:30:45",
+                            "Last Update: $formattedLastUpdate",
                             style: GoogleFonts.roboto(
                               color: AppColors.whiteSecondary,
                               fontSize: 13,

@@ -8,9 +8,9 @@ class EspRepository {
       if (event.snapshot.value == null) return false;
 
       int lastSeen = event.snapshot.value as int;
-      int currentTime = DateTime.now().millisecondsSinceEpoch;
+      int serverTimeEstimated = DateTime.now().millisecondsSinceEpoch;
       
-      return (currentTime - lastSeen) < 15000;
+      return (serverTimeEstimated - lastSeen).abs() < 15000;
     });
   }
 }

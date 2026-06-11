@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shimizu_app/core/models/pump_model.dart';
 import '../repositories/pump_repository.dart';
 
 part 'pump_provider.g.dart';
@@ -8,19 +9,19 @@ part 'pump_provider.g.dart';
 @Riverpod(keepAlive: true)
 class PumpControl extends _$PumpControl {
   final PumpRepository _repository = PumpRepository();
-  StreamSubscription<bool>? _subscription;
+  StreamSubscription<PumpModel>? _subscription;
   StreamSubscription<List<ConnectivityResult>>? _networkSubscription;
 
   @override
-  FutureOr<bool> build() async {
+  FutureOr<PumpModel> build() async {
     ref.onDispose(() {
       _subscription?.cancel();
       _networkSubscription?.cancel();
     });
 
     _subscription = _repository.streamPumpStatus().listen(
-      (status) {
-        state = AsyncData(status);
+      (pumpData) {
+        state = AsyncData(pumpData); 
       },
       onError: (err, stack) {
         state = AsyncError(err, stack);
@@ -34,7 +35,7 @@ class PumpControl extends _$PumpControl {
           results.contains(ConnectivityResult.wifi)) {
         if (state.hasError || (state.isLoading && !state.hasValue)) {
           try {
-            state = const AsyncLoading<bool>();
+            state = const AsyncLoading<PumpModel>();
             final freshStatus = await _repository.streamPumpStatus().first;
             state = AsyncData(freshStatus);
           } catch (err, stack) {
@@ -49,8 +50,6 @@ class PumpControl extends _$PumpControl {
 
   Future<void> togglePump(bool targetState) async {
     try {
-      state = const AsyncLoading<bool>();
-
       await _repository.setPumpStatus(targetState);
     } catch (err, stack) {
       state = AsyncError(err, stack);
