@@ -13,7 +13,7 @@ part of 'esp_status_provider.dart';
 const espStatusControlProvider = EspStatusControlProvider._();
 
 final class EspStatusControlProvider
-    extends $AsyncNotifierProvider<EspStatusControl, bool> {
+    extends $StreamNotifierProvider<EspStatusControl, bool> {
   const EspStatusControlProvider._()
     : super(
         from: null,
@@ -33,10 +33,10 @@ final class EspStatusControlProvider
   EspStatusControl create() => EspStatusControl();
 }
 
-String _$espStatusControlHash() => r'a42c73d895d7749c9bbda96ce7bbbf242e701b74';
+String _$espStatusControlHash() => r'5bf75891d34536da43dc2f10b722a967d9486779';
 
-abstract class _$EspStatusControl extends $AsyncNotifier<bool> {
-  FutureOr<bool> build();
+abstract class _$EspStatusControl extends $StreamNotifier<bool> {
+  Stream<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
