@@ -55,7 +55,11 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
 
     double minX = 0;
     double maxX = 3;
-    double maxYEnergy = 5.0;
+    
+    double minYVolt = 180, maxYVolt = 250;
+    double minYCurrent = 0, maxYCurrent = 2.0;
+    double minYPower = 0, maxYPower = 500;
+    double maxYEnergy = 1.0;
 
     List<FlSpot> voltageSpots = const [FlSpot(0, 180), FlSpot(1, 180), FlSpot(2, 180), FlSpot(3, 180)];
     List<FlSpot> currentSpots = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0)];
@@ -70,7 +74,31 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
       currentSpots = historyData.map((e) => FlSpot((e.time?.millisecondsSinceEpoch ?? 0).toDouble(), e.current)).toList();
       powerSpots = historyData.map((e) => FlSpot((e.time?.millisecondsSinceEpoch ?? 0).toDouble(), e.power)).toList();
       energySpots = historyData.map((e) => FlSpot((e.time?.millisecondsSinceEpoch ?? 0).toDouble(), e.energy)).toList();
-      maxYEnergy = historyData.last.energy + 1.0;
+
+      double maxV = historyData.map((e) => e.voltage).reduce((a, b) => a > b ? a : b);
+      double minV = historyData.map((e) => e.voltage).reduce((a, b) => a < b ? a : b);
+      
+      double calculatedMinV = ((minV - 2) / 10).floor() * 10.0;
+      double calculatedMaxV = ((maxV + 2) / 10).ceil() * 10.0;
+      
+      if (calculatedMaxV - calculatedMinV < 20) {
+        calculatedMinV = calculatedMinV - 10;
+        calculatedMaxV = calculatedMaxV + 10;
+      }
+
+      minYVolt = calculatedMinV.clamp(0, 240);
+      maxYVolt = calculatedMaxV.clamp(210, 260);
+
+      double maxA = historyData.map((e) => e.current).reduce((a, b) => a > b ? a : b);
+      double calculatedMaxA = (maxA < 0.2) ? 1.0 : ((maxA + 0.3) / 0.4).ceil() * 0.4;
+      maxYCurrent = calculatedMaxA;
+
+      double maxW = historyData.map((e) => e.power).reduce((a, b) => a > b ? a : b);
+      double calculatedMaxW = (maxW < 10) ? 300 : ((maxW + 50) / 40).ceil() * 40.0;
+      maxYPower = calculatedMaxW;
+
+      double maxE = historyData.map((e) => e.energy).reduce((a, b) => a > b ? a : b);
+      maxYEnergy = maxE < 0.1 ? 0.4 : ((maxE + 0.1) / 0.4).ceil() * 0.4;
     }
 
     final Color offlineLineColor = AppColors.whiteQuaternary.withOpacity(0.10);
@@ -216,7 +244,7 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
                       lineColor: showChartSkeleton ? offlineLineColor : Colors.cyan,
                       spots: voltageSpots,
                       minX: minX, maxX: maxX,
-                      minY: 180, maxY: 250,
+                      minY: minYVolt, maxY: maxYVolt,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -228,7 +256,7 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
                       lineColor: showChartSkeleton ? offlineLineColor : Colors.green,
                       spots: currentSpots,
                       minX: minX, maxX: maxX,
-                      minY: 0, maxY: 6.0,
+                      minY: minYCurrent, maxY: maxYCurrent,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -240,7 +268,7 @@ class _ElectricalTabState extends ConsumerState<ElectricalContent> {
                       lineColor: showChartSkeleton ? offlineLineColor : Colors.orange,
                       spots: powerSpots,
                       minX: minX, maxX: maxX,
-                      minY: 0, maxY: 1200,
+                      minY: minYPower, maxY: maxYPower,
                     ),
                   ),
                   const SizedBox(height: 20),
