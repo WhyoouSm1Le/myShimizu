@@ -42,9 +42,9 @@ class _MainPageState extends State<MainWrapper> {
         backgroundColor: AppColors.primaryDark,
         elevation: 0,
         centerTitle: true,
-        leading: Icon(
-          Icons.menu, 
-          color: AppColors.whitePrimary
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: AppColors.whitePrimary), 
+          onPressed: () {},
         ),
         title: Text(
           _titles[_selectedIndex],
@@ -53,10 +53,10 @@ class _MainPageState extends State<MainWrapper> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: const [
-          Icon(
-            Icons.notifications_none, 
-            color: AppColors.whitePrimary
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: AppColors.whitePrimary),
+            onPressed: () {},
           ),
           SizedBox(width: 20),
         ],
