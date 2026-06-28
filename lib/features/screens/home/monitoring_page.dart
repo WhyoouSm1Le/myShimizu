@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimizu_app/core/providers/tab_provider.dart';
 import 'package:shimizu_app/features/screens/home/contents/monitoring/electrical_content.dart';
+import 'package:shimizu_app/features/screens/home/contents/monitoring/water_level_content.dart';
 import 'package:shimizu_app/widgets/constants/theme.dart';
 
 class MonitoringPage extends ConsumerStatefulWidget {
@@ -14,7 +15,7 @@ class MonitoringPage extends ConsumerStatefulWidget {
 
 class _MonitoringPageState extends ConsumerState<MonitoringPage> {
   late PageController _pageController;
-  final List<String> _categories = ["Electrical", "Water Flow", "Panel Box"];
+  final List<String> _categories = ["Electrical", "Water Level", "Panel Box"];
   
   @override
   void initState() {
@@ -94,12 +95,7 @@ class _MonitoringPageState extends ConsumerState<MonitoringPage> {
               },
               children: [
                 ElectricalContent(),
-                const Center(
-                  child: Text(
-                    "Water Flow Content",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                WaterLevelContent(),
                 const Center(
                   child: Text(
                     "Panel Box Content",

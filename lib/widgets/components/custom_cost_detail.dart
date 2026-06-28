@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimizu_app/widgets/constants/theme.dart';
 
 class CustomCostDetail extends StatelessWidget {
   final String label;
@@ -24,7 +25,7 @@ class CustomCostDetail extends StatelessWidget {
             child: Text(
               label,
               style: GoogleFonts.roboto(
-                color: Colors.white60,
+                color: AppColors.whiteSecondary,
                 fontSize: 13,
               ),
             ),
@@ -34,7 +35,7 @@ class CustomCostDetail extends StatelessWidget {
             child: Text(
               value,
               style: GoogleFonts.roboto(
-                color: Colors.white,
+                color: AppColors.whitePrimary,
                 fontWeight: FontWeight.w500,
                 fontSize: 13,
               ),
