@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shimizu_app/core/providers/auth_provider.dart';
 
@@ -30,8 +31,16 @@ class AuthController extends _$AuthController {
     state = await AsyncValue.guard(() async {
       final credential = await repository.signUpWithEmailAndPassword(email, password);
       await credential.user?.updateDisplayName(name);
+      await credential.user?.reload();
     });
 
     return !state.hasError;
+  }
+
+  Future<void> logout() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await FirebaseAuth.instance.signOut();
+    });
   }
 }

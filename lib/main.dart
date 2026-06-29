@@ -37,9 +37,10 @@ class ShimizuApp extends ConsumerWidget {
           return const LoginPage();
         },  
         loading: () => const Scaffold(
+          backgroundColor: AppColors.primaryDark,
           body: Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.greenPrimary),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.whiteSecondary),
             ),
           ),
         ),

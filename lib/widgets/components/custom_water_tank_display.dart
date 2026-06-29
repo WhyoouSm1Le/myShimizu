@@ -52,7 +52,7 @@ class _CylinderTankPainter extends CustomPainter {
     final double rightX = w * 0.95;
 
     final tankOutlinePaint = Paint()
-      ..color = Colors.white.withOpacity(0.3)
+      ..color = AppColors.whitePrimary.withOpacity(0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
@@ -61,9 +61,9 @@ class _CylinderTankPainter extends CustomPainter {
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         colors: [
-          Colors.white.withOpacity(0.02),
-          Colors.white.withOpacity(0.06),
-          Colors.white.withOpacity(0.01),
+          AppColors.whitePrimary.withOpacity(0.02),
+          AppColors.whitePrimary.withOpacity(0.06),
+          AppColors.whitePrimary.withOpacity(0.01),
         ],
         stops: const [0.0, 0.3, 1.0],
       ).createShader(Rect.fromLTRB(leftX, offsetTop, rightX, offsetTop + tankHeight))

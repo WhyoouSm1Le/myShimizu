@@ -1,19 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimizu_app/core/providers/auth_state_notifier.dart';
 import 'package:shimizu_app/features/screens/home/analytics_page.dart';
 import 'package:shimizu_app/features/screens/home/control_page.dart';
 import 'package:shimizu_app/features/screens/home/monitoring_page.dart';
 import 'package:shimizu_app/widgets/constants/theme.dart';
 
-class MainWrapper extends StatefulWidget {
+class MainWrapper extends ConsumerStatefulWidget {
   const MainWrapper({super.key});
 
   @override
-  State<MainWrapper> createState() => _MainPageState();
+  ConsumerState<MainWrapper> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainWrapper> {
+class _MainPageState extends ConsumerState<MainWrapper> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> _pages = [
     const ControlPage(),
@@ -36,7 +40,10 @@ class _MainPageState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.primaryDark,
       appBar: AppBar(
         backgroundColor: AppColors.primaryDark,
@@ -44,7 +51,7 @@ class _MainPageState extends State<MainWrapper> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.menu, color: AppColors.whitePrimary), 
-          onPressed: () {},
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         title: Text(
           _titles[_selectedIndex],
@@ -62,6 +69,67 @@ class _MainPageState extends State<MainWrapper> {
         ],
       ),
       body: _pages[_selectedIndex],
+
+      drawer: Drawer(
+        backgroundColor: AppColors.primaryDark,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(
+                color: AppColors.secondaryDark
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: AppColors.whiteQuaternary,
+                backgroundImage: user?.photoURL != null
+                    ? NetworkImage(user!.photoURL!)
+                    : null,
+                child: user?.photoURL == null
+                    ? const Icon(Icons.person, size: 40, color: AppColors.whitePrimary)
+                    : null,
+              ),
+              accountName: Text(
+                user?.displayName ?? 'Shimizu User',
+                style: GoogleFonts.roboto(
+                  color: AppColors.whitePrimary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                ),
+              ), 
+              accountEmail: Text(
+                user?.email ?? 'No email bound',
+                style: GoogleFonts.roboto(
+                  color: AppColors.whiteTertiary,
+                  fontSize: 13,
+                ),
+              )
+            ),
+
+            const SizedBox(height: 10),
+
+            const Spacer(),
+
+            const Divider(color: AppColors.secondaryDark, thickness: 1),
+
+            ListTile(
+              leading: const Icon(Icons.logout_rounded, color: AppColors.redPrimary),
+              title: Text(
+                'Sign Out',
+                style: GoogleFonts.roboto(
+                  color: AppColors.whitePrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              onTap: () async {
+                Navigator.of(context).pop();
+
+                await ref.read(authControllerProvider.notifier).logout();
+              },
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
 
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(

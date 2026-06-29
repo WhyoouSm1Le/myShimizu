@@ -65,14 +65,14 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#000000"
-  image: assets/images/app_logo.png
+  image: assets/icons/application_splash.png
   android: true
   ios: true
   web: false
 
   android_12:
     color: "#000000"
-    image: assets/images/app_logo.png
+    image: assets/icons/application_splash.png
     icon_background_color: "#000000"
 
 # For information on the generic Dart part of this file, see the

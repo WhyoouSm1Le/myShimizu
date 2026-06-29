@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimizu_app/core/providers/auth_state_notifier.dart';
 import 'package:shimizu_app/widgets/constants/theme.dart';
+import 'package:shimizu_app/widgets/components/custom_text_field.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -10,14 +11,13 @@ class RegisterPage extends ConsumerStatefulWidget {
   @override
   ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
-
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
@@ -37,7 +37,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Lu harus setuju sama Terms & Privacy Policy dulu, brok!',
+              'You must agree to the Terms of Service and Privacy Policy.',
               style: GoogleFonts.roboto(color: AppColors.whitePrimary),
             ),
             backgroundColor: AppColors.redPrimary,
@@ -46,7 +46,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         return;
       }
 
-      final success = await ref.read(authControllerProvider.notifier).register(
+      final success = await ref
+          .read(authControllerProvider.notifier)
+          .register(
             _emailController.text.trim(),
             _passwordController.text.trim(),
             _nameController.text.trim(),
@@ -56,7 +58,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Registrasi berhasil! Silakan login, brok.', style: GoogleFonts.roboto()),
+              content: Text(
+                'Registration completed successfully!',
+                style: GoogleFonts.roboto(),
+              ),
               backgroundColor: AppColors.greenPrimary,
             ),
           );
@@ -66,7 +71,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                errorState.error?.toString() ?? 'Registrasi gagal, periksa kembali data lu!',
+                errorState.error?.toString() ??
+                    'Registration failed. Please check your data.',
                 style: GoogleFonts.roboto(color: AppColors.whitePrimary),
               ),
               backgroundColor: AppColors.redPrimary,
@@ -92,140 +98,106 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 20),
-                  // Logo Aplikasi dari asset lu
-                  Center(
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/application_logo.jpeg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Text(
                     'Create Account',
                     style: GoogleFonts.roboto(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
                       color: AppColors.whitePrimary,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(
                     'Fill in the details to get started',
                     style: GoogleFonts.roboto(
                       fontSize: 13,
-                      color: AppColors.whiteQuaternary,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Input Full Name
-                  Text(
-                    'Full Name',
-                    style: GoogleFonts.roboto(
                       color: AppColors.whiteSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  TextFormField(
+                  const SizedBox(height: 32),
+
+                  CustomTextField(
                     controller: _nameController,
-                    style: GoogleFonts.roboto(color: AppColors.whitePrimary),
-                    decoration: _buildInputDecoration('Enter your full name', Icons.person_outline),
-                    validator: (val) => val == null || val.isEmpty ? 'Nama kagak boleh kosong, brok!' : null,
+                    label: 'Full Name',
+                    hint: 'Enter your full name',
+                    prefixIcon: Icons.person_outline,
+                    validator: (val) => val == null || val.isEmpty
+                        ? 'Please enter your full name'
+                        : null,
                   ),
                   const SizedBox(height: 16),
 
-                  // Input Email
-                  Text(
-                    'Email',
-                    style: GoogleFonts.roboto(
-                      color: AppColors.whiteSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
+                  CustomTextField(
                     controller: _emailController,
-                    style: GoogleFonts.roboto(color: AppColors.whitePrimary),
+                    label: 'Email',
+                    hint: 'Enter your email',
+                    prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: _buildInputDecoration('Enter your email', Icons.email_outlined),
-                    validator: (val) => val == null || !val.contains('@') ? 'Email kagak valid, brok!' : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Input Password
-                  Text(
-                    'Password',
-                    style: GoogleFonts.roboto(
-                      color: AppColors.whiteSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    style: GoogleFonts.roboto(color: AppColors.whitePrimary),
-                    decoration: _buildInputDecoration(
-                      'Create a password',
-                      Icons.lock_outline,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          color: AppColors.whiteTertiary,
-                        ),
-                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                      ),
-                    ),
-                    validator: (val) => val == null || val.length < 6 ? 'Password minimal 6 karakter' : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Input Confirm Password
-                  Text(
-                    'Confirm Password',
-                    style: GoogleFonts.roboto(
-                      color: AppColors.whiteSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: _obscureConfirmPassword,
-                    style: GoogleFonts.roboto(color: AppColors.whitePrimary),
-                    decoration: _buildInputDecoration(
-                      'Confirm your password',
-                      Icons.lock_outline,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
-                          color: AppColors.whiteTertiary,
-                        ),
-                        onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
-                      ),
-                    ),
                     validator: (val) {
-                      if (val == null || val.isEmpty) return 'Konfirmasi password wajib diisi';
-                      if (val != _passwordController.text) return 'Password kagak cocok, brok!';
+                      if (val == null || val.isEmpty)
+                        return 'Please enter your email address';
+                      if (!val.contains('@'))
+                        return 'Please enter a valid email address';
                       return null;
                     },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
-                  // Checkbox Terms and Conditions
+                  CustomTextField(
+                    controller: _passwordController,
+                    label: 'Password',
+                    hint: 'Create a password',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: _obscurePassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.whiteTertiary,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                    validator: (val) {
+                      if (val == null || val.isEmpty)
+                        return 'Please create a password';
+                      if (val.length < 6)
+                        return 'Password must be at least 6 characters';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  CustomTextField(
+                    controller: _confirmPasswordController,
+                    label: 'Confirm Password',
+                    hint: 'Confirm your password',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: _obscureConfirmPassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.whiteTertiary,
+                      ),
+                      onPressed: () => setState(
+                        () =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword,
+                      ),
+                    ),
+                    validator: (val) {
+                      if (val == null || val.isEmpty)
+                        return 'Please confirm your password';
+                      if (val != _passwordController.text)
+                        return 'Passwords do not match';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
                   Row(
                     children: [
                       SizedBox(
@@ -235,35 +207,45 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           value: _agreeToTerms,
                           activeColor: AppColors.greenPrimary,
                           checkColor: AppColors.whitePrimary,
-                          side: const BorderSide(color: AppColors.whiteQuaternary),
-                          onChanged: (val) => setState(() => _agreeToTerms = val ?? false),
+                          side: const BorderSide(
+                            color: AppColors.whiteQuaternary,
+                          ),
+                          onChanged: (val) =>
+                              setState(() => _agreeToTerms = val ?? false),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'I agree to the Terms of Service and Privacy Policy',
-                          style: GoogleFonts.roboto(color: AppColors.whiteSecondary, fontSize: 12),
+                          style: GoogleFonts.roboto(
+                            color: AppColors.whiteSecondary,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
 
-                  // Tombol Sign Up
                   ElevatedButton(
                     onPressed: authState.isLoading ? null : _handleRegister,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.greenPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       elevation: 0,
                     ),
                     child: authState.isLoading
                         ? const SizedBox(
                             height: 20,
                             width: 20,
-                            child: CircularProgressIndicator(color: AppColors.whitePrimary, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: AppColors.whitePrimary,
+                              strokeWidth: 2,
+                            ),
                           )
                         : Text(
                             'SIGN UP',
@@ -276,13 +258,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Footer Back to Login
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "Already have an account? ",
-                        style: GoogleFonts.roboto(color: AppColors.whiteSecondary, fontSize: 13),
+                        style: GoogleFonts.roboto(
+                          color: AppColors.whiteSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(),
@@ -297,37 +281,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  InputDecoration _buildInputDecoration(String hint, IconData prefix, {Widget? suffixIcon}) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: GoogleFonts.roboto(color: AppColors.whiteTertiary, fontSize: 14),
-      prefixIcon: Icon(prefix, color: AppColors.whiteQuaternary),
-      suffixIcon: suffixIcon,
-      filled: true,
-      fillColor: AppColors.secondaryDark,
-      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      
-      // Menggunakan OutlineInputBorder yang valid agar tidak error merah
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.greenPrimary, width: 1.5),
       ),
     );
   }
